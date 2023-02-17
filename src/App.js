@@ -13,7 +13,9 @@ function App() {
               <ProfileContent />
           </AuthenticatedTemplate>
           <UnauthenticatedTemplate>
+            <div id="main">
               <p>Ulogirajte se za prikaz podataka!</p>
+            </div>
           </UnauthenticatedTemplate>
       </PageLayout>
   );
@@ -23,15 +25,13 @@ function ProfileContent() {
   const { instance, accounts } = useMsal();
   const [graphData, setGraphData] = useState(null);
 
-  const name = accounts[0] && accounts[0].name;
-
   function RequestProfileData() {
       const request = {
           ...loginRequest,
           account: accounts[0]
       };
 
-      // Silently acquires an access token which is then attached to a request for Microsoft Graph data
+      
       instance.acquireTokenSilent(request).then((response) => {
           callMsGraph(response.accessToken).then(response => setGraphData(response));
       }).catch((e) => {
@@ -43,12 +43,14 @@ function ProfileContent() {
 
   return (
       <>
-          <h5 className="card-title">Dobrodosao {name}</h5>
+        <div id="main">
+          <h5 className="card-title">Dobrodošao</h5>
           {graphData ? 
               <ProfileData graphData={graphData} />
               :
               <Button variant="secondary" onClick={RequestProfileData}>Zatrazi podatke</Button>
           }
+          </div>
       </>
   );
 };
